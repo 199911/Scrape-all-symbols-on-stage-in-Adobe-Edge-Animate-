@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Adobe Edge Animate</title>
+  <link rel="stylesheet" type="text/css" href="doc.css">
+</head><body class="preview">
+
+<div id="doc_header">
+<h1 id="adobe-edge-animate">Adobe Edge Animate</h1>
+<h2 id="to-control-symbols-and-symbols-children">To control symbols and symbols&#39; children</h2>
+<hr>
+</div>
+
+<div id="doc_content">
+<p><em>Theme Name:</em> A few function written by Sunday<br><em>Author:</em>  Sunday<br><em>Created:</em> 30/06/2014<br><em>Version:</em> 0.0.0  </p>
+<hr>
+<p>I write a few function which can get all symbols on the stage or symbols with its children
+Hope my code can be reuse. Therefore, I write this document to teach how to use my code.</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li>Installation</li>
+<li>Documentation</li>
+<li>Demonstration</li>
+<li>Modification</li>
+</ol>
+<hr>
+<h2 id="1-installation">1. Installation</h2>
+<p>Just copy my code in suitable place.</p>
+<ol>
+<li>Open you adobe edge animate project</li>
+<li>Show the Code window (ctrl+E or cmd+E or Window-&gt;Code)<br><img src="img1.png" alt="Show the Code Window" title="Show the Code Window">
+<img src="img2.png" alt="Result" title="Result"></li>
+<li>Select <strong>Stage</strong> on the left hand column</li>
+<li>Copy following copy following code into it  <pre><code> var symbols;
+ function getSymbolTree(sym){
+     return [sym].concat(dfs(sym));
+ }
+ function control(symbolArray,funct){
+     for (var i=0; i &lt; symbolArray.length; i++) {
+         eval(&quot;symbolArray[i].&quot; + funct);
+     }
+ }
+ function dfs(sym){
+     var arr = sym.getChildSymbols();
+     var ret = [];
+     for (var i=0; i &lt; arr.length; i++) {
+         ret = ret.concat(dfs(arr[i]));
+         console.log(arr[i].getSymbolTypeName() );
+     }
+     ret = ret.concat(arr);
+     return ret;
+ }
+</code></pre><img src="img3.png" alt="Code copied to stage" title="Code in stage"></li>
+<li>Click the <strong>+</strong> button on the right hand side of <strong>stage</strong>, select <strong>Event</strong> and <strong>creationComplete</strong><br><img src="img4.png" alt="Select creationComplete" title="Select creationComplete"></li>
+<li>Copy following code into it<pre><code> symbols = getSymbolTree(sym);
+</code></pre><img src="img5.png" alt="Code copied to creationComplete" title="Code in creationComplete"></li>
+</ol>
+<hr>
+<h2 id="2-documentation">2. Documentation</h2>
+<p>Explain what and how my code work, if you are not interested in programming,
+just skip this part.  </p>
+<ol>
+<li><p>Code in stage<br>We put so-call global variable and function here, <code>symbols</code> is one of the example</p>
+<ul>
+<li><code>symbols</code><br>is a global variable stores every symbols on stages, include stage itself  </li>
+<li><code>getSymbolTree(sym)</code><br>returns an array contains all child symbols of <code>sym</code> and <code>sym</code> itself. </li>
+<li><code>control(symbolArray,funct)</code><br>returns nothing.<br>call the function <code>funct</code> for all symbols in <code>symbolArray</code></li>
+<li><code>dfs(sym)</code><br>is a function for internal use, <strong><em>user should not call it</em></strong>.<br>It performs dfs in <code>sym</code> and returns an array contain contains all child symbols of <code>sym</code>.<br>Since <code>sym</code> is a tree, an array which used to mark the node is visited or not is not neccessary.
+This function is a recursive function, it is recommended <strong>NOT TO MODIFY THIS FUNCTION</strong>, unless you completely understand what you are doing.  </li>
+</ul>
+</li>
+<li><p>Code in creationComplete
+Every lines of code will be called, when everything is ready.
+So it is a good place to put <code>getSymbolTree(sym)</code> here</p>
+<ul>
+<li><code>symbols = getSymbolTree(sym);</code><br>fill <code>symbols</code> with an array contains all child symbols of <code>sym</code> and <code>sym</code> itself.  </li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="3-demonstration">3. Demonstration</h2>
+<p>A few lines of code show that how to use my functions.  </p>
+<ol>
+<li>Pause every symbols on the stages <pre><code> control(symbols,&quot;stop()&quot;);
+</code></pre></li>
+<li>Play every symbols on the stages<pre><code> control(symbols,&quot;play()&quot;);
+</code></pre></li>
+<li>Reset all symbols on the stages<pre><code> control(symbols,&quot;stop(0)&quot;);
+</code></pre></li>
+<li>Play every symbols on the stages, start from 1 second<pre><code> control(symbols,&quot;play(1)&quot;);
+</code></pre></li>
+<li>To play an particular symbol named <code>foo</code> on the stage  <ol>
+<li>At <strong>stage</strong>, add following code  <pre><code> var foo;
+</code></pre></li>
+<li>At <strong>creationComplete</strong>, add following code  <pre><code> foo = sym.getSymbol(&quot;foo&quot;);
+ foo = getSymbolTree(foo);
+</code></pre></li>
+<li>Add the following code in a suitable place  <pre><code> control(foo,&quot;play()&quot;);  
+</code></pre></li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="4-modification">4. Modification</h2>
+<p>Modification of this documentation  </p>
+<table>
+  <tr>
+    <th>Date</th>
+    <th>version</th>
+    <th>Note</th>
+  </tr>
+  <tr>
+    <td>06/30</td>
+    <td>0.0.0</td>
+    <td>Start working</td>
+  </tr>
+    <tr>
+    <td>07/04</td>
+    <td>1.0.0</td>
+    <td>First Version</td>
+  </tr>
+</table>
+<div>
+</body></html>
